@@ -1,0 +1,3 @@
+<a *ngFor="let item of starList; let i = index" (click)="setStar(i)">
+  <i class="fa" [ngClass]="{ 'fa-star-o': item, 'fa-star': !item }"></i>
+</a>
