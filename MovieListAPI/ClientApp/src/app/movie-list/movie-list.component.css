@@ -50,3 +50,10 @@ i:hover {
 .fa-times {
   opacity: 0.1;
 }
+
+.error {
+  color: red;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 14px;
+}

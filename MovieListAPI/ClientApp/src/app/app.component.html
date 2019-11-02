@@ -6,17 +6,24 @@
   </div>
   <div class="col-11 movie-lists">
     <div class="row justify-content-center">
-      <!-- START INDIVIDUAL MOVIE LISTS -->
-      <div
-        *ngFor="let movieList of movieLists; index as i"
-        class="movie-list col-3-md"
-      >
-        <app-movie-list
-          [movieLists]="movieLists"
-          [movieList]="movieList"
-          [i]="i"
+      <div *ngIf="movieLists.length > 0">
+        <!-- START INDIVIDUAL MOVIE LISTS -->
+        <div
+          *ngFor="let movieList of movieLists; index as i"
+          class="movie-list col-3-md"
         >
-        </app-movie-list>
+          <app-movie-list
+            [movieLists]="movieLists"
+            [movieList]="movieList"
+            [i]="i"
+            [rootUrl]="rootUrl"
+            [genres]="genres"
+          >
+          </app-movie-list>
+        </div>
+      </div>
+      <div *ngIf="movieLists.length == 0" style="padding: 10px 0">
+        No movie lists created
       </div>
       <!-- END INDIVIDUAL MOVIE LISTS -->
     </div>

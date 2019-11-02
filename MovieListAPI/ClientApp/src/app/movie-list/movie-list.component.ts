@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { MovieList } from "../movie-list.model";
 import { Movie } from "./movie.model";
@@ -8,22 +8,25 @@ import { Movie } from "./movie.model";
   templateUrl: "./movie-list.component.html",
   styleUrls: ["./movie-list.component.css"]
 })
-export class MovieListComponent implements OnInit {
+export class MovieListComponent {
   constructor(private http: HttpClient) {}
   @Input() movieLists: Array<MovieList>;
   @Input() movieList: MovieList;
-  @Input() i: Number;
+  @Input() i: number;
+  @Input() rootUrl: string;
+  @Input() genres: Array<string>;
 
-  // URL for the .NET API
-  readonly rootURL = "https://localhost:44350/api/Movies";
+  // // URL for the .NET API
+  // readonly rootURL = "https://localhost:44350/api/Movies";
+
+  // Error Message for the same genre
+  errorMsg: string;
+
+  oldGenre: string;
 
   // Omdb API variables
   moviesFound = false; // true if the omdb api finds any matching movies
   titles: []; // an array of the movie titles returned by the omdb api
-
-  ngOnInit() {
-    //this.getMovies()
-  }
 
   // deletes a movie list
   deleteMovieList(i) {
@@ -33,22 +36,45 @@ export class MovieListComponent implements OnInit {
   // switches to an input box to rename the genre
   changeToMovieListInput(movieList) {
     movieList.genreClicked = !movieList.genreClicked;
+    this.oldGenre = movieList.genre;
     movieList.genre = "";
   }
 
   // renames the genre based on the input box value
   renameGenre(movieList) {
+    let genre = this.wordFormatting(movieList.genre);
     if (movieList.genre == "") {
       movieList.genre = "Forgot Genre?";
+      movieList.genreClicked = !movieList.genreClicked;
+    } else if (this.genres.indexOf(genre) > -1 && genre != this.oldGenre) {
+      this.errorMsg = "This genre is already being used, please rename it";
+    } else {
+      this.errorMsg = "";
+      let i = this.genres.indexOf(this.oldGenre);
+      if (i != -1) {
+        this.genres.splice(i, 1);
+      }
+      this.oldGenre = "";
+      this.genres.push(genre);
+      movieList.genre = genre;
+      movieList.genreClicked = !movieList.genreClicked;
     }
-    movieList.genre = this.wordFormatting(movieList.genre);
-    movieList.genreClicked = !movieList.genreClicked;
+    console.log(this.genres);
   }
 
   // Movie Functions
   addMovie(i) {
     this.resetOmdbVariables();
-    this.movieLists[i].movies.push(new Movie(0, "", 0, true));
+    let movie = new Movie(0, "", 0, true);
+    // add to the db
+    this.http.post(this.rootUrl, movie).subscribe(
+      res => {
+        console.log("Res: " + res);
+      },
+      err => console.log(err)
+    );
+    // add to the client
+    this.movieLists[i].movies.push(movie);
   }
 
   deleteMovie(i, j) {

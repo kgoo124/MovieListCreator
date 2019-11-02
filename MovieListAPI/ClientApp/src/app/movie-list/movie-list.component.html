@@ -1,99 +1,110 @@
 <div class="container">
-  <!-- START GENRE AND DELETE MOVIE ROW -->
-  <div class="row justify-content-center">
-    <div class="col-9 genre">
-      <h5
-        *ngIf="!movieList.genreClicked"
-        style="font-weight: bold;"
-        (click)="changeToMovieListInput(movieList)"
+  <!-- OVERLAY TO DISABLE WHEN MAKING API CALLS -->
+  <div class="overlay">
+    <!-- START GENRE AND DELETE MOVIE ROW -->
+    <div class="row justify-content-center">
+      <div class="col-9 genre">
+        <h5
+          *ngIf="!movieList.genreClicked"
+          style="font-weight: bold;"
+          (click)="changeToMovieListInput(movieList)"
+        >
+          {{ movieList.genre }}
+        </h5>
+        <input
+          *ngIf="movieList.genreClicked"
+          class="form-control"
+          autofocus
+          (mouseout)="renameGenre(movieList)"
+          (keyup.enter)="renameGenre(movieList)"
+          placeholder="Move mouse out/hit enter"
+          value="text"
+          [(ngModel)]="movieList.genre"
+        />
+      </div>
+      <i
+        class="col-1 fa"
+        [ngClass]="movieList.collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"
+        (click)="movieList.collapsed = !movieList.collapsed"
       >
-        {{ movieList.genre }}
-      </h5>
-      <input
-        *ngIf="movieList.genreClicked"
-        class="form-control"
-        autofocus
-        (mouseout)="renameGenre(movieList)"
-        (keyup.enter)="renameGenre(movieList)"
-        placeholder="Move mouse out/hit enter"
-        value="text"
-        [(ngModel)]="movieList.genre"
-      />
+      </i>
+      <i
+        class="col-1 fa fa-times"
+        style="margin-top: 1px;"
+        (click)="deleteMovieList(i)"
+      ></i>
     </div>
-    <i
-      class="col-1 fa"
-      [ngClass]="movieList.collapsed ? 'fa-chevron-down' : 'fa-chevron-up'"
-      (click)="movieList.collapsed = !movieList.collapsed"
-    >
-    </i>
-    <i
-      class="col-1 fa fa-times"
-      style="margin-top: 1px;"
-      (click)="deleteMovieList(i)"
-    ></i>
-  </div>
 
-  <!-- START MESSAGE WHEN COLLAPSED -->
-  <div *ngIf="movieList.collapsed">
-    <p style="opacity: 0.6; font-size: 16px">
-      Click the arrow to view these movies<br /><br />Click the genres and movie
-      titles to change them
-    </p>
-  </div>
-  <!-- END MESSAGE WHEN COLLAPSED -->
+    <!-- START MESSAGE WHEN COLLAPSED -->
+    <div *ngIf="movieList.collapsed">
+      <p style="opacity: 0.6; font-size: 16px">
+        Click the arrow to view these movies<br /><br />Click the genres and
+        movie titles to change them
+      </p>
+    </div>
+    <!-- END MESSAGE WHEN COLLAPSED -->
 
-  <!-- END GENRE AND DELETE MOVIE ROW -->
+    <!-- END GENRE AND DELETE MOVIE ROW -->
 
-  <div class="row" [ngClass]="movieList.collapsed ? 'collapse' : ''">
-    <ul class="col-12">
-      <!-- START INDIVIDUAL MOVIES  -->
-      <li *ngFor="let movie of movieList.movies; index as j" class="row">
-        <div class="col-9">
-          <div *ngIf="!movie.movieClicked" (click)="changeToMovieInput(movie)">
-            <span
-              ><i
-                class="fa fa-times movie"
-                style="margin-right: 8px;"
-                (click)="deleteMovie(i, j)"
-              ></i></span
-            ><span class="movie">{{ movie.title }}</span>
-          </div>
-
-          <!-- START OMBD API -->
-          <div *ngIf="movie.movieClicked" class="row dropdown">
-            <input
-              class="form-control col-12"
-              style="margin-right: 2px"
-              autofocus
-              (keyup.enter)="renameMovie(movie, movie.title)"
-              (blur)="renameMovie(movie, movie.title)"
-              (keyup)="ombdAPI(movie.title)"
-              placeholder="Hit enter or select a movie"
-              value="text"
-              [(ngModel)]="movie.title"
-            />
+    <div class="row" [ngClass]="movieList.collapsed ? 'collapse' : ''">
+      <ul class="col-12">
+        <!-- START INDIVIDUAL MOVIES  -->
+        <li *ngFor="let movie of movieList.movies; index as j" class="row">
+          <div class="col-9">
             <div
-              class="dropdown-menu col-12"
-              [ngClass]="moviesFound ? 'show' : ''"
+              *ngIf="!movie.movieClicked"
+              (click)="changeToMovieInput(movie)"
             >
-              <a
-                *ngFor="let title of titles"
-                class="dropdown-item"
-                style="font-size: 14px"
-                href="#"
-                (click)="renameMovie(movie, title)"
-                >{{ title }}</a
-              >
+              <span
+                ><i
+                  class="fa fa-times movie"
+                  style="margin-right: 8px;"
+                  (click)="deleteMovie(i, j)"
+                ></i></span
+              ><span class="movie">{{ movie.title }}</span>
             </div>
+
+            <!-- START OMBD API -->
+            <div *ngIf="movie.movieClicked" class="row dropdown">
+              <input
+                class="form-control col-12"
+                style="margin-right: 2px"
+                autofocus
+                (keyup.enter)="renameMovie(movie, movie.title)"
+                (blur)="renameMovie(movie, movie.title)"
+                (keyup)="ombdAPI(movie.title)"
+                placeholder="Hit enter or select a movie"
+                value="text"
+                [(ngModel)]="movie.title"
+              />
+              <div
+                class="dropdown-menu col-12"
+                [ngClass]="moviesFound ? 'show' : ''"
+              >
+                <a
+                  *ngFor="let title of titles"
+                  class="dropdown-item"
+                  style="font-size: 14px"
+                  href="#"
+                  (click)="renameMovie(movie, title)"
+                  >{{ title }}</a
+                >
+              </div>
+            </div>
+            <!-- END OMBD API -->
           </div>
-          <!-- END OMBD API -->
-        </div>
-        <span><app-star-rating [rating]="movie.rating"></app-star-rating></span>
-      </li>
-      <!-- END INDIVIDUAL MOVIES  -->
-    </ul>
-    <button class="col-12" (click)="addMovie(i)">
-      Add Movie
-    </button>
+          <span
+            ><app-star-rating [rating]="movie.rating"></app-star-rating
+          ></span>
+        </li>
+        <!-- END INDIVIDUAL MOVIES  -->
+      </ul>
+      <button class="col-12" (click)="addMovie(i)">
+        Add Movie
+      </button>
+    </div>
+    <div class="error">
+      {{ errorMsg }}
+    </div>
   </div>
 </div>
