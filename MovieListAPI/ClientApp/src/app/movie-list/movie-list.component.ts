@@ -67,12 +67,12 @@ export class MovieListComponent {
     this.resetOmdbVariables();
     let movie = new Movie(0, "", 0, true);
     // add to the db
-    this.http.post(this.rootUrl, movie).subscribe(
-      res => {
-        console.log("Res: " + res);
-      },
-      err => console.log(err)
-    );
+    // this.http.post(this.rootUrl, movie).subscribe(
+    //   res => {
+    //     console.log("Res: " + res);
+    //   },
+    //   err => console.log(err)
+    // );
     // add to the client
     this.movieLists[i].movies.push(movie);
   }

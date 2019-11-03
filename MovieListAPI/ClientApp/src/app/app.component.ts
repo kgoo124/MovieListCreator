@@ -65,12 +65,7 @@ export class AppComponent implements OnInit {
   // adds a new movie list
   addMovieList() {
     this.movieLists.push(
-      new MovieList(
-        "",
-        [new Movie(0, "Movie1", 0, false), new Movie(0, "Movie2", 2, false)],
-        true,
-        true
-      )
+      new MovieList("", [new Movie(0, "Movie1", 0, false)], true, true)
     );
   }
 }
