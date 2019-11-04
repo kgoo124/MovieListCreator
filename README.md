@@ -1,8 +1,12 @@
 # MovieListCreator
 
+Front-End: Bootstrap, Angular, Font-Awesome
+Back-End: C# .NET ASP Core (Entity Framework)
+Database: MySQL
+
 <a href="https://kgoo124.github.io/MovieListCreator/">Access the Front-End Demo of the MovieListCreator</a>
 
-Functionality:
+Current Functionality:
 
 <ul>
     <li>Able to add new movie lists</li>
