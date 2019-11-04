@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 
   // functions
   async ngOnInit() {
-    // this.getMovies();
+    this.getMovies();
   }
 
   // Server-Side Movie List Functions
